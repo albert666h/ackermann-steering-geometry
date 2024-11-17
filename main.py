@@ -13,15 +13,21 @@ running = True
 FPS = 60
 clock = pygame.time.Clock()
 
-rover = Rover(pos=np.array([540, 360], dtype='float'), wheels=[
-    Wheel(np.array([-100, 150], dtype='float'), 0),
-    Wheel(np.array([-100, 50], dtype='float'), 0),
-    Wheel(np.array([-100, -150], dtype='float'), 0),
-    Wheel(np.array([100, 150], dtype='float'), 0),
-    Wheel(np.array([100, 50], dtype='float'), 0),
-    Wheel(np.array([100, -150], dtype='float'), 0)
-])
+rover = Rover(pos=np.array([540, 360], dtype='float'), 
+        wheels=[
+            Wheel(np.array([-100, 150], dtype='float'), 0),
+            Wheel(np.array([-100, 50], dtype='float'), 0),
+            Wheel(np.array([-100, -150], dtype='float'), 0),
+            Wheel(np.array([100, 150], dtype='float'), 0),
+            Wheel(np.array([100, 50], dtype='float'), 0),
+            Wheel(np.array([100, -150], dtype='float'), 0)
+        ], 
+        max_turn_angle=45)
 
+keys_pressed = {
+    'a': False,
+    'd': False
+}
 
 if __name__ == "__main__":
     while running:
@@ -29,9 +35,26 @@ if __name__ == "__main__":
             if e.type == pygame.QUIT:
                 running = False
                 break
+
+            elif e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_a:
+                    keys_pressed['a'] = True
+                elif e.key == pygame.K_d:
+                    keys_pressed['d'] = True
+
+            elif e.type == pygame.KEYUP:
+                if e.key == pygame.K_a:
+                    keys_pressed['a'] = False
+                elif e.key == pygame.K_d:
+                    keys_pressed['d'] = False
                 
         window.fill((33, 33, 33))
         clock.tick(FPS)
+
+        if keys_pressed['a']:
+            rover.turn(1)
+        elif keys_pressed['d']:
+            rover.turn(-1)
 
         # display the wheels
         for wheel in rover.wheels:
